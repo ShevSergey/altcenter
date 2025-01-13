@@ -65,8 +65,12 @@ class AboutWidget(QWidget):
 
         # Создаем метки
         os_info = my_utils.parse_os_release()
+        # os_info = my_utils.parse_os_release('./tests/etc/os-release-edu')
         s = self.translate_os_name(os_info["MY_NAME"])
-        os_name = "{}{}".format(s, os_info["MY_NAME_REST"])
+        os_name = "{}{}".format(s, os_info["MY_NAME_VERSION"])
+        if os_info["MY_NAME_NICK"] != '':
+            os_name = os_name + '<br>' + os_info["MY_NAME_NICK"]
+
         label1 = QLabel(os_name)
         label1.setAlignment(Qt.AlignCenter)
         label1.setWordWrap(True)
@@ -99,20 +103,26 @@ class AboutWidget(QWidget):
         grid_label4 = QLabel(my_utils.get_display_server())
         self.text.append('{} {}'.format(grid_label3.text(), grid_label4.text()))
 
-        # cpu_name, num_cores = my_utils.get_cpu_info_from_proc()
+        # cpu
+        cpu_name, num_cores = my_utils.get_cpu_info_from_proc()
         # self.formLayout.addRow(self.tr("Processor:"), QLabel("{} x {}".format(num_cores, cpu_name)))
+        grid_label5 = QLabel(self.tr("Processor:"))
+        grid_label6 = QLabel('{} x {}'.format(num_cores, cpu_name))
+        self.text.append('{} {}'.format(grid_label5.text(), grid_label6.text()))
 
+        # memory
         total_memory, used_memory, free_memory = my_utils.get_memory_info_from_free()
-        grid_label5 = QLabel(self.tr("Memory (used/total):"))
+        grid_label7 = QLabel(self.tr("Memory (used/total):"))
         gb = self.tr("GB")
         s = f"{used_memory / (1024 ** 3):.2f} {gb}  /  {total_memory / (1024 ** 3):.2f} {gb}"
-        grid_label6 = QLabel(s)
-        self.text.append('{} {}\n'.format(grid_label5.text(), grid_label6.text()))
+        grid_label8 = QLabel(s)
+        self.text.append('{} {}\n'.format(grid_label7.text(), grid_label8.text()))
 
         # Устанавливаем выравнивание для левого столбца (по правому краю)
         grid_label1.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         grid_label3.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         grid_label5.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        grid_label7.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
 
         # Добавляем элементы в сетку
         grid_layout.addWidget(grid_label1, 0, 0)
@@ -121,6 +131,8 @@ class AboutWidget(QWidget):
         grid_layout.addWidget(grid_label4, 1, 1)
         grid_layout.addWidget(grid_label5, 2, 0)
         grid_layout.addWidget(grid_label6, 2, 1)
+        grid_layout.addWidget(grid_label7, 3, 0)
+        grid_layout.addWidget(grid_label8, 3, 1)
 
         # Добавляем сетку в контейнер
         container_layout.addLayout(grid_layout)

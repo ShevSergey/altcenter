@@ -1,4 +1,5 @@
 import os, re, subprocess
+from pathlib import Path
 
 
 def parse_os_release(file_name = '/etc/os-release') -> dict:
@@ -21,6 +22,7 @@ def parse_os_release(file_name = '/etc/os-release') -> dict:
 
     if 'PRETTY_NAME' in os_info:
         s = os_info["PRETTY_NAME"].split('(')[0]
+        nick_name = os_info["PRETTY_NAME"][len(s):].strip()
 
         # Делим на слова и версию
         match = re.split(r'( \d)', s, maxsplit=1)
@@ -29,7 +31,8 @@ def parse_os_release(file_name = '/etc/os-release') -> dict:
         rest = match[1] + match[2] if len(match) > 2 else ""  # Остальная часть (с числом)
 
         os_info["MY_NAME"] = name
-        os_info["MY_NAME_REST"] = rest.rstrip()
+        os_info["MY_NAME_VERSION"] = rest.rstrip()
+        os_info["MY_NAME_NICK"] = nick_name
 
     return os_info
 
@@ -99,32 +102,97 @@ def get_video_info_from_inxi():
         return "inxi command not found", None, None
 
 
+def add_to_autostart(app_name, command):
+    autostart_dir = Path.home() / '.config' / 'autostart'
+
+    # Создаём каталог автозагрузки, если он не существует
+    autostart_dir.mkdir(parents=True, exist_ok=True)
+
+    # Путь к .desktop файлу
+    desktop_file = autostart_dir / f"{app_name}.desktop"
+
+    # Формируем содержимое .desktop файла
+    desktop_entry = f"""[Desktop Entry]
+Type=Application
+Name={app_name}
+Exec={command}
+X-GNOME-Autostart-enabled=true
+NoDisplay=false
+Comment=Autostart {app_name}
+"""
+
+    # Записываем данные в .desktop файл
+    with open(desktop_file, 'w') as f:
+        f.write(desktop_entry)
+
+    # Делаем файл исполнимым
+    desktop_file.chmod(0o755)
+    # print(f"{app_name} добавлено в автозагрузку.")
+
+
+def remove_from_autostart(app_name):
+    autostart_dir = Path.home() / '.config' / 'autostart'
+
+    # Путь к .desktop файлу
+    desktop_file = autostart_dir / f"{app_name}.desktop"
+
+    # Проверяем, существует ли файл
+    if desktop_file.exists():
+        desktop_file.unlink()  # Удаляем файл
+        # print(f"{app_name} удалено из автозагрузки.")
+    else:
+        # print(f"{app_name} не найдено в автозагрузке.")
+        pass
+
+
+def is_in_autostart(app_name) -> bool:
+    autostart_dir = Path.home() / '.config' / 'autostart'
+    desktop_file = autostart_dir / f"{app_name}.desktop"
+
+    if desktop_file.exists():
+        # print(f"{app_name} присутствует в автозагрузке.")
+        return True
+    else:
+        # print(f"{app_name} не найдено в автозагрузке.")
+        return False
+
+
 if __name__ == "__main__":
-    def test_parse_os_release(s) -> str:
-        os_info = parse_os_release(s)
-        s = os_info['PRETTY_NAME']
-        ns = f"{os_info['MY_NAME']=}\n{os_info['MY_NAME_REST']=}"
-        print(s)
-        print(ns)
-        print()
+    # def test_parse_os_release(s) -> str:
+    #     os_info = parse_os_release(s)
+    #     s = os_info['PRETTY_NAME']
+    #     ns = f"{os_info['MY_NAME']=}\n{os_info['MY_NAME_VERSION']=}"
+    #     nick_name = f'{os_info["MY_NAME_NICK"]=}'
+    #     print(s)
+    #     print(ns)
+    #     print(nick_name)
+    #     print()
+    #
+    # test_parse_os_release('./tests/etc/os-release-regular')
+    # test_parse_os_release('./tests/etc/os-release-edu')
+    # test_parse_os_release('./tests/etc/os-release-wsk')
+    # test_parse_os_release('./tests/etc/os-release-server-v')
+    # test_parse_os_release('./tests/etc/os-release-xxx')
 
-    test_parse_os_release('./tests/etc/os-release-regular')
-    test_parse_os_release('./tests/etc/os-release-edu')
-    test_parse_os_release('./tests/etc/os-release-wsk')
-    test_parse_os_release('./tests/etc/os-release-server-v')
-    test_parse_os_release('./tests/etc/os-release-xxx')
+    # # for key, value in os_info.items():
+    # #     print(f"{key}: {value}")
 
-    # for key, value in os_info.items():
-    #     print(f"{key}: {value}")
+    # text = "ALT Virtualization Server 10.2 10.4 25 56 abc   "
+    # # text = "ALT Regular"
+    #
+    # match = re.split(r'( \d)', text, maxsplit=1)
+    #
+    # part1 = match[0]
+    # part2 = match[1] + match[2] if len(match) > 2 else ""
+    # part2 = part2.rstrip()
+    #
+    # print(f"Часть до первой цифры: '{part1}'")
+    # print(f"Остальная часть: '{part2}'")
 
-    text = "ALT Virtualization Server 10.2 10.4 25 56 abc   "
-    # text = "ALT Regular"
 
-    match = re.split(r'( \d)', text, maxsplit=1)
+    # add_to_autostart("altcenter", Path.home() / "Rabota/Python/altcenter/altcenter")    # /usr/bin/myapp")
+    # remove_from_autostart("altcenter")
+    # is_in_autostart("altcenter")
 
-    part1 = match[0]
-    part2 = match[1] + match[2] if len(match) > 2 else ""
-    part2 = part2.rstrip()
-
-    print(f"Часть до первой цифры: '{part1}'")
-    print(f"Остальная часть: '{part2}'")
+    [cpu_name, num_cores] = get_cpu_info_from_proc()
+    print(f'{cpu_name=}  {num_cores=}')

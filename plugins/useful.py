@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame
-from PyQt5.QtGui import QStandardItem
+from PyQt5.QtWidgets import QVBoxLayout, QFrame
+from PyQt5.QtGui import QStandardItem, QFont
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 
 import locale, os, markdown
 
 import plugins
+import my_utils_pyqt5
 
 
 class PluginUseful(plugins.Base):
@@ -41,10 +42,13 @@ class PluginUseful(plugins.Base):
         frame_layout.addWidget(self.text_browser)
 
         # Добавляем QFrame в основной layout
-        # layout.addWidget(frame)
         pane.addWidget(frame)
 
-
+        px = my_utils_pyqt5.point_size_to_pixels(pane.font().pointSize())
+        if px > 0:
+            px = px + 1
+        else:
+            px = 22
 
         # self.index = pane.addWidget(self.text_browser)
         # self.index = pane.addWidget(widget)
@@ -86,8 +90,12 @@ class PluginUseful(plugins.Base):
 
         styled_html = f"""
         <style>
+        body {{
+            font-family: Monospace, Liberation Mono;
+            font-size: {px}px;
+        }}
         code {{
-            font-family: Liberation Mono, DejaVu Sans Mono;
+            font-family: Monospace, Liberation Mono, DejaVu Sans Mono;
             color: #101010;
             background-color: #dcdcdc;
             padding: 1px 0px;
@@ -95,7 +103,7 @@ class PluginUseful(plugins.Base):
             border-radius: 2px;
         }}
         pre {{
-            font-family: Liberation Mono, DejaVu Sans Mono;
+            font-family: Monospace, Liberation Mono, DejaVu Sans Mono;
             background-color: #dcdcdc;
             margin: 15px;
             padding: 10px 20px;
