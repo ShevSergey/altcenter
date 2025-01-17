@@ -255,13 +255,12 @@ class GetSystemInfo(QObject):
 
 class PluginHardware(plugins.Base):
     def __init__(self):
-        super().__init__(30)
+        super().__init__("hardware", 30)
         self.node = None
-        # self.hardware_widget = None
-
 
     def start(self, plist, pane):
         self.node = QStandardItem(self.tr("Hardware"))
+        self.node.setData(self.getName())
         plist.appendRow([self.node])
 
         self.text_browser = QTextBrowser()

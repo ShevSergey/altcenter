@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 
-from PyQt5.QtWidgets import (QApplication, QWidget,
+from PyQt5.QtWidgets import (QWidget,
                              QVBoxLayout, QLabel,
                              QGridLayout, QScrollArea,
                              QSpacerItem, QSizePolicy,
                              QMenu, QAction)
-from PyQt5.QtGui import QStandardItem, QClipboard, QFont
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QStandardItem
+from PyQt5.QtCore import Qt
 
 import os
 import sys
@@ -75,7 +75,7 @@ class AboutWidget(QWidget):
         label1.setAlignment(Qt.AlignCenter)
         label1.setWordWrap(True)
         label_font = container.font()
-        label_font.setPointSize(label_font.pointSize() + 14)
+        label_font.setPointSize(label_font.pointSize() * 2)
         # label_font.setBold(True)
         label1.setFont(label_font)
         self.text = []
@@ -181,12 +181,13 @@ class AboutWidget(QWidget):
 
 class PluginAbout(plugins.Base):
     def __init__(self):
-        super().__init__(1)
+        super().__init__("about", 1)
         self.node = None
         self.about_widget = None
 
     def start(self, plist, pane):
         self.node = QStandardItem(self.tr("About system"))
+        self.node.setData(self.getName())
         plist.appendRow([self.node])
 
         main_palette = pane.window().palette()
@@ -199,6 +200,6 @@ if __name__ == '__main__':
     from PyQt5.QtWidgets import QApplication
 
     app = QApplication(sys.argv)
-    window = AboutWidget()
+    window = AboutWidget(app.palette())
     window.show()
     sys.exit(app.exec_())

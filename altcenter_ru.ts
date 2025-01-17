@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ru_RU">
+<!DOCTYPE TS><TS version="2.0" language="ru_RU" sourcelanguage="">
 <context>
     <name>AboutWidget</name>
     <message>
@@ -595,17 +594,17 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="ui_mainwindow.py" line="106"/>
+        <location filename="ui_mainwindow.py" line="105"/>
         <source>ALT Center</source>
         <translation>ALT Center</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="107"/>
+        <location filename="ui_mainwindow.py" line="106"/>
         <source>Do not run on next sesion start</source>
         <translation>Не загружать при старте следующей сессии</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="108"/>
+        <location filename="ui_mainwindow.py" line="107"/>
         <source>&amp;Close</source>
         <translation>В&amp;ыход</translation>
     </message>
@@ -686,7 +685,7 @@
 <context>
     <name>PluginDocumentation</name>
     <message>
-        <location filename="plugins/documentation.py" line="20"/>
+        <location filename="plugins/documentation.py" line="17"/>
         <source>Documentation</source>
         <translation>Документация</translation>
     </message>
@@ -694,7 +693,7 @@
 <context>
     <name>PluginHardware</name>
     <message>
-        <location filename="plugins/hardware.py" line="264"/>
+        <location filename="plugins/hardware.py" line="262"/>
         <source>Hardware</source>
         <translation>Оборудование</translation>
     </message>
@@ -702,7 +701,7 @@
 <context>
     <name>PluginLicense</name>
     <message>
-        <location filename="plugins/license.py" line="38"/>
+        <location filename="plugins/license.py" line="34"/>
         <source>License</source>
         <translation>Лицензия</translation>
     </message>
@@ -710,9 +709,22 @@
 <context>
     <name>PluginUseful</name>
     <message>
-        <location filename="plugins/useful.py" line="27"/>
+        <location filename="plugins/useful.py" line="19"/>
         <source>Useful Information</source>
         <translation>Полезная информация</translation>
+    </message>
+</context>
+<context>
+    <name>app</name>
+    <message>
+        <location filename="mainwindow.py" line="129"/>
+        <source>Run at session startup</source>
+        <translation>Запускать при запуске сеанса</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.py" line="130"/>
+        <source>List available modules and exit</source>
+        <translation>Вывести список доступных модулей и завершить работу</translation>
     </message>
 </context>
 </TS>

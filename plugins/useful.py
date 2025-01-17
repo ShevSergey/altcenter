@@ -12,25 +12,14 @@ import my_utils_pyqt5
 
 class PluginUseful(plugins.Base):
     def __init__(self):
-        super().__init__(50)
+        super().__init__("useful", 50)
         self.node = None
-        self.useful_widget = None
-
-    # def start(self, plist, pane):
-    #     self.node = QStandardItem(self.tr("Useful Information"))
-    #     plist.appendRow([self.node])
-
-    #     self.useful_widget = UsefulWidget()
-    #     pane.addWidget(self.useful_widget)
 
     def start(self, plist, pane):
         self.node = QStandardItem(self.tr("Useful Information"))
+        self.node.setData(self.getName())
         plist.appendRow([self.node])
 
-        # widget = QWidget()
-        # self.setCentralWidget(widget)
-        # layout = QVBoxLayout(widget)
-        # layout.setContentsMargins(0, 0, 0, 0)
         frame = QFrame()
         frame.setFrameStyle(QFrame.Shape.StyledPanel | QFrame.Shadow.Sunken)
 
@@ -49,9 +38,6 @@ class PluginUseful(plugins.Base):
             px = px + 1
         else:
             px = 22
-
-        # self.index = pane.addWidget(self.text_browser)
-        # self.index = pane.addWidget(widget)
 
         current_file = os.path.abspath(__file__)
         current_dir = os.path.dirname(current_file)

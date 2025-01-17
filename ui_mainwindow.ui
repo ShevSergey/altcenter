@@ -16,13 +16,11 @@
     <height>800</height>
    </size>
   </property>
-  <property name="font">
-   <font>
-    <pointsize>11</pointsize>
-   </font>
-  </property>
   <property name="windowTitle">
    <string>ALT Center</string>
+  </property>
+  <property name="windowIcon">
+   <iconset theme="preferences"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

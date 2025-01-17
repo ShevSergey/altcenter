@@ -27,9 +27,10 @@ class Base(QObject):
     plugins = []
     name = ""
 
-    def __init__(self, position):
+    def __init__(self, name: str, position: int):
         super().__init__()
-        self.position = position
+        self._name = name
+        self._position = position
 
     # For every class that inherits from the current
     # the class name will be added to plugins
@@ -40,11 +41,14 @@ class Base(QObject):
     def start(self, plist, pane):
         pass
 
-    def setName(self, name):
-        self.name = name
+    # def setName(self, name):
+    #     self._name = name
 
-    def getPosition(self):
-        return self.position
+    def getName(self) -> str:
+        return self._name
+
+    def getPosition(self) -> int:
+        return self._position
 
 
 # Load one module

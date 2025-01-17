@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QLabel, QGroupBox,
-                            QGridLayout, QScrollArea, QTextBrowser)
-from PyQt5.QtGui import QStandardItem, QFont, QTextDocument, QDesktopServices
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QTextBrowser
+from PyQt5.QtGui import QStandardItem, QFont, QTextDocument
 from PyQt5.QtCore import QUrl
 
 import locale, os
@@ -12,17 +10,17 @@ import plugins
 
 class PluginDocumentation(plugins.Base):
     def __init__(self):
-        super().__init__(20)
+        super().__init__("documentation", 20)
         self.node = None
-        self.useful_widget = None
 
     def start(self, plist, pane):
         self.node = QStandardItem(self.tr("Documentation"))
+        self.node.setData(self.getName())
         plist.appendRow([self.node])
 
         self.text_browser = QTextBrowser()
         self.text_browser.setOpenExternalLinks(True)
-        self.text_browser.setCurrentFont(QFont("monospace", 9))
+        self.text_browser.setCurrentFont(QFont("Monospace", 9))
         self.index = pane.addWidget(self.text_browser)
 
         current_file = os.path.abspath(__file__)
