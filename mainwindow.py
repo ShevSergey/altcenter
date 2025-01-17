@@ -93,9 +93,9 @@ class MainWindow(QWidget, Ui_MainWindow):
 
     def on_checkbox_toggled(self, checked):
         if checked:
-            my_utils.remove_from_autostart(app_name)
+            my_utils.remove_from_autostart(APPLICATION_NAME)
         else:
-            my_utils.add_to_autostart(app_name, pathlib.Path(current_dir) / app_name)
+            my_utils.add_to_autostart(APPLICATION_NAME, pathlib.Path(current_dir) / APPLICATION_NAME)
 
 
     def onSelectionChange(self, index):
