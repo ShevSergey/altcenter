@@ -22,27 +22,29 @@ APPLICATION_VERSION = '1.0'
 from PyQt5.QtWidgets import QApplication, QWidget
 from PyQt5.QtCore import QTranslator, QSettings
 from PyQt5.QtCore import QCommandLineParser, QCommandLineOption
-from PyQt5.QtCore import QItemSelectionModel
 # from PyQt5 import uic
-from PyQt5.QtGui import QStandardItemModel
+from PyQt5.QtGui import QStandardItemModel, QPixmap
 
 import os
 import sys
 import locale
 import pathlib
 
-current_file = os.path.abspath(__file__)
-current_dir = os.path.dirname(current_file)
-os.chdir(current_dir)
+# current_file = os.path.abspath(__file__)
+# current_dir = os.path.dirname(current_file)
+# os.chdir(current_dir)
 
 from ui_mainwindow import Ui_MainWindow
 from plugins import Base
-import my_utils
+# import my_utils
 
-data_dir = "/usr/share/altcenter"
-data_dir = "."
+# data_dir = "/usr/share/altcenter"
+# data_dir = "."
 
-plugin_path = os.path.join(data_dir, "plugins")
+# plugin_path = os.path.join(data_dir, "plugins")
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+plugin_path = os.path.join(current_dir, "plugins")
 
 
 class MainWindow(QWidget, Ui_MainWindow):
@@ -60,8 +62,8 @@ class MainWindow(QWidget, Ui_MainWindow):
         self.splitter.setStretchFactor(0,0)
         self.splitter.setStretchFactor(1,1)
 
-        self.runOnSessionStart.setChecked(not my_utils.is_in_autostart(APPLICATION_NAME))
-        self.runOnSessionStart.toggled.connect(self.on_checkbox_toggled)
+        # self.runOnSessionStart.setChecked(not my_utils.is_in_autostart(APPLICATION_NAME))
+        # self.runOnSessionStart.toggled.connect(self.on_checkbox_toggled)
 
         # Получаем размеры экрана
         screen_geometry = QApplication.desktop().screenGeometry()
@@ -90,17 +92,22 @@ class MainWindow(QWidget, Ui_MainWindow):
         )
 
 
-
-    def on_checkbox_toggled(self, checked):
-        if checked:
-            my_utils.remove_from_autostart(APPLICATION_NAME)
-        else:
-            my_utils.add_to_autostart(APPLICATION_NAME, pathlib.Path(current_dir) / APPLICATION_NAME)
+    # def on_checkbox_toggled(self, checked):
+    #     if checked:
+    #         my_utils.remove_from_autostart(APPLICATION_NAME)
+    #     else:
+    #         my_utils.add_to_autostart(APPLICATION_NAME, pathlib.Path(current_dir) / APPLICATION_NAME)
 
 
     def onSelectionChange(self, index):
         """Slot for change selection"""
         self.stack.setCurrentIndex(index.row() + 1)
+
+
+    def onSessionStartChange(self, state):
+        """Slot to change autostart checkbox change"""
+        self.settings.setValue('Settings/runOnSessionStart', (state == 2))
+        self.settings.sync()
 
 
 # Run application
@@ -113,8 +120,8 @@ current_config = os.path.join(pathlib.Path.home(), ".config", "altcenter.ini")
 settings = QSettings(current_config, QSettings.IniFormat)
 
 # Load current locale translation
-current_file = os.path.abspath(__file__)
-current_dir = os.path.dirname(current_file)
+# current_file = os.path.abspath(__file__)
+# current_dir = os.path.dirname(current_file)
 
 translator = QTranslator(app)
 tr_file = os.path.join(current_dir, 'altcenter_' + locale.getlocale()[0].split( '_' )[0])
@@ -153,8 +160,8 @@ window = MainWindow() # Create an instance of our class
 window.settings = settings
 
 # Set autostart checkbox state
-# window.runOnSessionStart.setChecked(value_runOnSessionStart)
-# window.runOnSessionStart.stateChanged.connect(window.onSessionStartChange)
+window.runOnSessionStart.setChecked(value_runOnSessionStart)
+window.runOnSessionStart.stateChanged.connect(window.onSessionStartChange)
 
 # Set module list model
 window.list_module_model = QStandardItemModel()
@@ -188,6 +195,9 @@ window.moduleList.setCurrentIndex(index)
 
 window.splitter.setStretchFactor(0,0)
 window.splitter.setStretchFactor(1,1)
+
+# Reset logo by absolute path
+window.altLogo.setPixmap(QPixmap(os.path.join(current_dir, "basealt.png")))
 
 # Show window
 window.show()

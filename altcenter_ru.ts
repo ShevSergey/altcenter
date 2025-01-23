@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="2.0" language="ru_RU" sourcelanguage="">
+<!DOCTYPE TS>
+<TS version="2.1" language="ru_RU">
 <context>
     <name>AboutWidget</name>
     <message>
@@ -13,12 +14,12 @@
         <translation>Графическая платформа:</translation>
     </message>
     <message>
-        <location filename="plugins/about.py" line="115"/>
+        <location filename="plugins/about.py" line="116"/>
         <source>Memory (used/total):</source>
-        <translation>Память (использовано/всего):</translation>
+        <translation type="obsolete">Память (использовано/всего):</translation>
     </message>
     <message>
-        <location filename="plugins/about.py" line="116"/>
+        <location filename="plugins/about.py" line="127"/>
         <source>GB</source>
         <translation>Гб</translation>
     </message>
@@ -68,14 +69,19 @@
         <translation>Альт Сервер</translation>
     </message>
     <message>
-        <location filename="plugins/about.py" line="162"/>
+        <location filename="plugins/about.py" line="173"/>
         <source>Copy text</source>
         <translation>Скопировать текст</translation>
     </message>
     <message>
-        <location filename="plugins/about.py" line="109"/>
+        <location filename="plugins/about.py" line="108"/>
         <source>Processor:</source>
         <translation>Процессор:</translation>
+    </message>
+    <message>
+        <location filename="plugins/about.py" line="126"/>
+        <source>Memory:</source>
+        <translation>Память:</translation>
     </message>
 </context>
 <context>
@@ -596,12 +602,12 @@
     <message>
         <location filename="ui_mainwindow.py" line="105"/>
         <source>ALT Center</source>
-        <translation>ALT Center</translation>
+        <translation>Центр Альта</translation>
     </message>
     <message>
         <location filename="ui_mainwindow.py" line="106"/>
         <source>Do not run on next sesion start</source>
-        <translation>Не загружать при старте следующей сессии</translation>
+        <translation>Не загружать в начале следующего сеанса</translation>
     </message>
     <message>
         <location filename="ui_mainwindow.py" line="107"/>
@@ -677,7 +683,7 @@
 <context>
     <name>PluginAbout</name>
     <message>
-        <location filename="plugins/about.py" line="189"/>
+        <location filename="plugins/about.py" line="200"/>
         <source>About system</source>
         <translation>О системе</translation>
     </message>
@@ -707,6 +713,14 @@
     </message>
 </context>
 <context>
+    <name>PluginSettings</name>
+    <message>
+        <location filename="plugins/settings.py" line="249"/>
+        <source>Settings</source>
+        <translation>Настройки</translation>
+    </message>
+</context>
+<context>
     <name>PluginUseful</name>
     <message>
         <location filename="plugins/useful.py" line="19"/>
@@ -715,16 +729,79 @@
     </message>
 </context>
 <context>
-    <name>app</name>
+    <name>SettingsWidget</name>
     <message>
-        <location filename="mainwindow.py" line="129"/>
-        <source>Run at session startup</source>
-        <translation>Запускать при запуске сеанса</translation>
+        <location filename="plugins/settings.py" line="29"/>
+        <source>Daily</source>
+        <translation>Ежедневно</translation>
     </message>
     <message>
-        <location filename="mainwindow.py" line="130"/>
+        <location filename="plugins/settings.py" line="29"/>
+        <source>Weekly</source>
+        <translation>Еженедельно</translation>
+    </message>
+    <message>
+        <location filename="plugins/settings.py" line="29"/>
+        <source>Monthly</source>
+        <translation>Ежемесячно</translation>
+    </message>
+    <message>
+        <location filename="plugins/settings.py" line="54"/>
+        <source>Updates</source>
+        <translation>Обновления</translation>
+    </message>
+    <message>
+        <location filename="plugins/settings.py" line="55"/>
+        <source>Advanced Settings</source>
+        <translation>Расширенные настройки</translation>
+    </message>
+    <message>
+        <location filename="plugins/settings.py" line="68"/>
+        <source>🔄 Enable Auto-update</source>
+        <translation>🔄 Включить автообновление</translation>
+    </message>
+    <message>
+        <location filename="plugins/settings.py" line="69"/>
+        <source>⏰ Update Frequency</source>
+        <translation>⏰ Частота обновлений</translation>
+    </message>
+    <message>
+        <location filename="plugins/settings.py" line="70"/>
+        <source>🔔 Notify About Updates</source>
+        <translation>🔔 Уведомлять об обновлениях</translation>
+    </message>
+    <message>
+        <location filename="plugins/settings.py" line="138"/>
+        <source>System Control Center</source>
+        <translation>Центр управления системой</translation>
+    </message>
+    <message>
+        <location filename="plugins/settings.py" line="134"/>
+        <source>General settings: power management, network, date, workspace behavior</source>
+        <translation>Общие настройки: энергосбережение, сеть, дата, поведение рабочей среды</translation>
+    </message>
+    <message>
+        <location filename="plugins/settings.py" line="140"/>
+        <source>User account management, system logs, kernel updates</source>
+        <translation>Управление учётными записями, системные журналы, обновлнение ядра</translation>
+    </message>
+    <message>
+        <location filename="plugins/settings.py" line="132"/>
+        <source>User Settings</source>
+        <translation>Параметры пользователя</translation>
+    </message>
+</context>
+<context>
+    <name>app</name>
+    <message>
+        <location filename="mainwindow.py" line="131"/>
+        <source>Run at session startup</source>
+        <translation>Запустить в начале сеанса</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.py" line="132"/>
         <source>List available modules and exit</source>
-        <translation>Вывести список доступных модулей и завершить работу</translation>
+        <translation>Показать список доступных модулей</translation>
     </message>
 </context>
 </TS>

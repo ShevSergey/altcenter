@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from PyQt5.QtWidgets import QVBoxLayout, QFrame
-from PyQt5.QtGui import QStandardItem, QFont
+from PyQt5.QtGui import QStandardItem
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 
 import locale, os, markdown
@@ -37,7 +37,7 @@ class PluginUseful(plugins.Base):
         if px > 0:
             px = px + 1
         else:
-            px = 22
+            px = 14
 
         current_file = os.path.abspath(__file__)
         current_dir = os.path.dirname(current_file)
@@ -77,11 +77,11 @@ class PluginUseful(plugins.Base):
         styled_html = f"""
         <style>
         body {{
-            font-family: Monospace, Liberation Mono;
+            /*font-family: Monospace, Liberation Mono;*/
             font-size: {px}px;
         }}
         code {{
-            font-family: Monospace, Liberation Mono, DejaVu Sans Mono;
+            /*font-family: Monospace, Liberation Mono, DejaVu Sans Mono;*/
             color: #101010;
             background-color: #dcdcdc;
             padding: 1px 0px;
@@ -89,7 +89,7 @@ class PluginUseful(plugins.Base):
             border-radius: 2px;
         }}
         pre {{
-            font-family: Monospace, Liberation Mono, DejaVu Sans Mono;
+            /*font-family: Monospace, Liberation Mono, DejaVu Sans Mono;*/
             background-color: #dcdcdc;
             margin: 15px;
             padding: 10px 20px;

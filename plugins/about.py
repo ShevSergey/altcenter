@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from PyQt5.QtWidgets import (QWidget,
+from PyQt5.QtWidgets import (QApplication, QWidget,
                              QVBoxLayout, QLabel,
                              QGridLayout, QScrollArea,
                              QSpacerItem, QSizePolicy,
@@ -69,14 +69,13 @@ class AboutWidget(QWidget):
         s = self.translate_os_name(os_info["MY_NAME"])
         os_name = "{}{}".format(s, os_info["MY_NAME_VERSION"])
         if os_info["MY_NAME_NICK"] != '':
-            os_name = os_name + '<br>' + os_info["MY_NAME_NICK"]
+            os_name = os_name + '\n' + os_info["MY_NAME_NICK"]
 
         label1 = QLabel(os_name)
         label1.setAlignment(Qt.AlignCenter)
         label1.setWordWrap(True)
         label_font = container.font()
         label_font.setPointSize(label_font.pointSize() * 2)
-        # label_font.setBold(True)
         label1.setFont(label_font)
         self.text = []
         self.text.append(os_name)
@@ -89,6 +88,7 @@ class AboutWidget(QWidget):
         # Добавляем метки в контейнер
         container_layout.addWidget(label1)
         container_layout.addWidget(label2)
+        container_layout.addWidget(QLabel())
 
         # Сетка для расположения элементов
         grid_layout = QGridLayout()
@@ -104,17 +104,28 @@ class AboutWidget(QWidget):
         self.text.append('{} {}'.format(grid_label3.text(), grid_label4.text()))
 
         # cpu
-        cpu_name, num_cores = my_utils.get_cpu_info_from_proc()
-        # self.formLayout.addRow(self.tr("Processor:"), QLabel("{} x {}".format(num_cores, cpu_name)))
+        cpus = my_utils.get_cpu_info_from_proc()
         grid_label5 = QLabel(self.tr("Processor:"))
-        grid_label6 = QLabel('{} x {}'.format(num_cores, cpu_name))
+        info = ''
+        for cpu in cpus:
+            if info > '':
+                info = info + ',\n'
+            cpu_name, num_cores, num_threads = cpu
+            if num_cores < num_threads:
+                info = info + '{}({}) x {}'.format(num_cores, num_threads, cpu_name)
+            else:
+                info = info + '{} x {}'.format(num_cores, cpu_name)
+        grid_label6 = QLabel(info)
         self.text.append('{} {}'.format(grid_label5.text(), grid_label6.text()))
 
         # memory
         total_memory, used_memory, free_memory = my_utils.get_memory_info_from_free()
-        grid_label7 = QLabel(self.tr("Memory (used/total):"))
+        # grid_label7 = QLabel(self.tr("Memory (used/total):"))
+        # gb = self.tr("GB")
+        # s = f"{used_memory / (1024 ** 3):.2f} {gb}  /  {total_memory / (1024 ** 3):.2f} {gb}"
+        grid_label7 = QLabel(self.tr("Memory:"))
         gb = self.tr("GB")
-        s = f"{used_memory / (1024 ** 3):.2f} {gb}  /  {total_memory / (1024 ** 3):.2f} {gb}"
+        s = f"{total_memory / (1024 ** 3):.2f} {gb}"
         grid_label8 = QLabel(s)
         self.text.append('{} {}\n'.format(grid_label7.text(), grid_label8.text()))
 
