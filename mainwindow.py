@@ -98,11 +98,9 @@ class MainWindow(QWidget, Ui_MainWindow):
     #     else:
     #         my_utils.add_to_autostart(APPLICATION_NAME, pathlib.Path(current_dir) / APPLICATION_NAME)
 
-
     def onSelectionChange(self, index):
         """Slot for change selection"""
         self.stack.setCurrentIndex(index.row() + 1)
-
 
     def onSessionStartChange(self, state):
         """Slot to change autostart checkbox change"""
@@ -114,6 +112,7 @@ class MainWindow(QWidget, Ui_MainWindow):
 app = QApplication(sys.argv)  # Create an instance of QtWidgets.QApplication
 app.setApplicationName(APPLICATION_NAME)
 app.setApplicationVersion(APPLICATION_VERSION)
+app.setDesktopFileName("altcenter")
 
 # Load settings
 current_config = os.path.join(pathlib.Path.home(), ".config", "altcenter.ini")
@@ -192,6 +191,7 @@ for p in Base.plugins:
 
 index = window.list_module_model.index(selected_index, 0)
 window.moduleList.setCurrentIndex(index)
+
 
 window.splitter.setStretchFactor(0,0)
 window.splitter.setStretchFactor(1,1)

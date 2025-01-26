@@ -25,7 +25,6 @@ from PyQt5.QtCore import QObject
 class Base(QObject):
     """Base skel for plugin"""
     plugins = []
-    name = ""
 
     def __init__(self, name: str, position: int):
         super().__init__()
@@ -40,9 +39,6 @@ class Base(QObject):
 
     def start(self, plist, pane):
         pass
-
-    # def setName(self, name):
-    #     self._name = name
 
     def getName(self) -> str:
         return self._name
