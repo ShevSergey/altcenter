@@ -71,7 +71,7 @@ class MainWindow(QWidget, Ui_MainWindow):
         screen_height = screen_geometry.height()
 
         # Задаем размеры окна
-        new_width = int((screen_width / 5) * 3)
+        new_width = int((screen_width / 4) * 2)
         new_height = screen_height // 2
 
         if new_width > self.width()  or  new_height > self.height():
