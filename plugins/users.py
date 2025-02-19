@@ -57,13 +57,19 @@ class PluginUsers(Base):
             btn.setEnabled(False)
             btn_layout.addWidget(btn)
         self.create_btn, self.delete_btn = btn_layout.itemAt(0).widget(), btn_layout.itemAt(1).widget()
+        self.password_input = QLineEdit(placeholderText="Password (optional)")
+        self.password_input.setEchoMode(QLineEdit.Password)
+
         layout.addWidget(self.auth_btn)
         layout.addWidget(self.auth_status)
         layout.addWidget(QLabel("\nUser Operations:"))
         layout.addWidget(self.username_input)
+        layout.addWidget(QLabel("Password:"))
+        layout.addWidget(self.password_input)
         layout.addLayout(btn_layout)
         self.widget.setLayout(layout)
         pane.addWidget(self.widget)
+
         self.auth_btn.clicked.connect(self.authenticate)
         self.create_btn.clicked.connect(self.create_user)
         self.delete_btn.clicked.connect(self.delete_user)
@@ -120,6 +126,8 @@ class PluginUsers(Base):
 
     def create_user(self):
         if not (username := self.validate_username()): return
+        password = self.password_input.text().strip()
+
         try:
             exists = self.user_exists(username)
             if exists:
@@ -129,8 +137,18 @@ class PluginUsers(Base):
             output, code = self.execute_command(f"useradd -m {username}")
             if code != 0 or not self.user_exists(username):
                 self.handle_error(f"Creation failed: {output}")
-            else:
-                QMessageBox.information(self.widget, "Success", "User created!")
+                return
+
+            if password:
+                password_escaped = password.replace('"', r'\"')
+                cmd = f'echo "{username}:{password_escaped}" | chpasswd'
+                pwd_output, pwd_code = self.execute_command(cmd)
+                if pwd_code != 0:
+                    self.handle_error(f"Password set failed: {pwd_output}")
+                    return
+
+            QMessageBox.information(self.widget, "Success", "User created successfully!")
+
         except Exception as e:
             self.handle_error(f"Error: {str(e)}")
 
