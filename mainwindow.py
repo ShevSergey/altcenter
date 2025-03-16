@@ -36,7 +36,7 @@ import pathlib
 
 from ui_mainwindow import Ui_MainWindow
 from plugins import Base
-# import my_utils
+import my_utils
 
 # data_dir = "/usr/share/altcenter"
 # data_dir = "."
@@ -197,7 +197,11 @@ window.splitter.setStretchFactor(0,0)
 window.splitter.setStretchFactor(1,1)
 
 # Reset logo by absolute path
-window.altLogo.setPixmap(QPixmap(os.path.join(current_dir, "basealt.png")))
+os_info = my_utils.parse_os_release()
+# os_info = my_utils.parse_os_release('tests/etc/os-release-regular')
+file_path = my_utils.get_alt_logo_path('/usr/share/icons/hicolor/64x64/apps/', os_info, 'res/basealt64.png')
+pixmap = QPixmap(file_path)
+window.altLogo.setPixmap(pixmap)
 
 # Show window
 window.show()

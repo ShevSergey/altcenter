@@ -66,6 +66,7 @@ class AboutWidget(QWidget):
 
         # Logo and name OS
         os_info = my_utils.parse_os_release()
+        # os_info = my_utils.parse_os_release('./tests/etc/os-release-regular')
         # os_info = my_utils.parse_os_release('./tests/etc/os-release-edu')
         # os_info = my_utils.parse_os_release('./tests/etc/os-release-server-v')
 
@@ -82,17 +83,21 @@ class AboutWidget(QWidget):
         # /usr/share/icons/hicolor/32x32/apps/altlinux.png
         # /usr/share/icons/hicolor/64x64/apps/altlinux.png
 
-        if 'LOGO' in os_info and os_info['LOGO'] != '':
-            logo_name = os_info['LOGO'] + '.png'
-        else:
-            logo_name = 'basealt.png'
+        # if 'LOGO' in os_info and os_info['LOGO'] != '':
+        #     logo_name = os_info['LOGO'] + '.png'
+        # else:
+        #     logo_name = 'basealt.png'
 
-        file_path = os.path.join('/usr/share/icons/hicolor/128x128/apps/', logo_name)
+        # file_path = os.path.join('/usr/share/icons/hicolor/128x128/apps/', logo_name)
 
-        if os.path.isfile(file_path):
-            pixmap = QPixmap(file_path)
-        else:
-            pixmap = QPixmap('res/basealt.png')
+        # if os.path.isfile(file_path):
+        #     pixmap = QPixmap(file_path)
+        # else:
+        #     pixmap = QPixmap('res/basealt.png')
+
+
+        file_path = my_utils.get_alt_logo_path('/usr/share/icons/hicolor/128x128/apps/', os_info, 'res/basealt128.png')
+        pixmap = QPixmap(file_path)
 
         label_logo.setPixmap(pixmap)
         label_logo.setAlignment(Qt.AlignCenter)
