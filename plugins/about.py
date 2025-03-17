@@ -96,10 +96,10 @@ class AboutWidget(QWidget):
         #     pixmap = QPixmap('res/basealt.png')
 
 
-        file_path = my_utils.get_alt_logo_path('/usr/share/icons/hicolor/128x128/apps/', os_info, 'res/basealt128.png')
+        file_path = my_utils.get_alt_logo_path('/usr/share/icons/hicolor/scalable/apps/', os_info, 'res/basealt128.png')
         pixmap = QPixmap(file_path)
-
-        label_logo.setPixmap(pixmap)
+        scaled_pixmap = pixmap.scaled(128, 128)
+        label_logo.setPixmap(scaled_pixmap)
         label_logo.setAlignment(Qt.AlignCenter)
 
 

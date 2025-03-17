@@ -199,9 +199,12 @@ window.splitter.setStretchFactor(1,1)
 # Reset logo by absolute path
 os_info = my_utils.parse_os_release()
 # os_info = my_utils.parse_os_release('tests/etc/os-release-regular')
-file_path = my_utils.get_alt_logo_path('/usr/share/icons/hicolor/64x64/apps/', os_info, 'res/basealt64.png')
+# os_info = my_utils.parse_os_release('tests/etc/os-release-wsk')
+# os_info = my_utils.parse_os_release('tests/etc/os-release-edu')
+file_path = my_utils.get_alt_logo_path('/usr/share/icons/hicolor/scalable/apps/', os_info, 'res/basealt64.png')
 pixmap = QPixmap(file_path)
-window.altLogo.setPixmap(pixmap)
+scaled_pixmap = pixmap.scaled(64, 64)
+window.altLogo.setPixmap(scaled_pixmap)
 
 # Show window
 window.show()
