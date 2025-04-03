@@ -10,6 +10,8 @@ from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot
 import subprocess
 import webbrowser
 
+import my_utils
+
 
 class GetSystemInfo(QObject):
     def __init__(self):
@@ -299,42 +301,42 @@ class BrowserThread(QThread):
 
 
 class HardwareWindow(QWidget):
-    def __init__(self):
+    def __init__(self, palette = None):
         super().__init__()
 
-        # btn = QPushButton("Upload Hardware Probe", self)
-        # btn.clicked.connect(self.authenticate)
-        #
-        # layout = QVBoxLayout()
-        # layout.addWidget(btn)
-        # self.setLayout(layout)
+        if palette != None:
+            self.setPalette(palette)
+            pass
+
+        layout = QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
 
 
-        main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(0, 0, 0, 0)  # Увеличили верхний отступ
+        if self.is_enabled_hw_probe():
+            top_panel = QWidget()
+            top_layout = QHBoxLayout(top_panel)
+            top_layout.setContentsMargins(15, 10, 15, 10)
 
-        # Верхняя панель с отступом
-        top_panel = QWidget()
-        top_layout = QHBoxLayout(top_panel)
-        top_layout.setContentsMargins(0, 10, 0, 10)  # Добавили вертикальные отступы
+            btn = QPushButton(self.tr("Upload Hardware Probe"))
+            btn.setStyleSheet("""
+                QPushButton {
+                    padding: 5px 15px;  /* Отступы сверху/снизу и слева/справа */
+                }
+            """)
+            btn.clicked.connect(self.authenticate)
+            top_layout.addWidget(btn, 0, Qt.AlignLeft)
 
-        self.link_label = QLabel()
-        # self.link_label.setMinimumHeight(60)
-        self.link_label.setAlignment(Qt.AlignCenter)
-        self.link_label.setTextFormat(Qt.RichText)
-        self.link_label.setOpenExternalLinks(True)
-        # self.link_label.setText('https://www.basealt.ru')
-        self.link_label.setStyleSheet('color: blue; text-decoration: underline;')
-        # self.link_label.setContentsMargins(20,0,20,0)
-        top_layout.addWidget(self.link_label)
+            self.link_label = QLabel()
+            self.link_label.setAlignment(Qt.AlignRight)
+            self.link_label.setTextFormat(Qt.RichText)
+            self.link_label.setOpenExternalLinks(True)
+            # self.link_label.setText('https://www.basealt.ru/dhsuhgfuseuiuighwuiheiuhwuighuihu')
+            self.link_label.setStyleSheet('color: blue; text-decoration: underline; padding: 5px 10px;')
+            top_layout.addWidget(self.link_label)
+            self.link_label.mousePressEvent = self.on_label_click
 
-        # Увеличенная кнопка
-        btn = QPushButton(self.tr("Upload Hardware Probe"))
-        # btn.setFixedSize(220, 60)  # Ширина 200px, высота 40px
-        btn.clicked.connect(self.authenticate)
-        top_layout.addWidget(btn, 0, Qt.AlignRight)
+            layout.addWidget(top_panel)
 
-        main_layout.addWidget(top_panel)
 
         # Основной текст
         self.text_browser = QTextBrowser()
@@ -344,13 +346,12 @@ class HardwareWindow(QWidget):
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setWidget(self.text_browser)
-        main_layout.addWidget(scroll)
+        layout.addWidget(scroll)
 
-        self.setLayout(main_layout)
-        self.setMinimumSize(600,800)
+        self.setLayout(layout)
+        # self.setMinimumSize(600,800)
 
         self.browser_thread = None
-        self.link_label.mousePressEvent = self.on_label_click
 
 
     def on_label_click(self, event):
@@ -365,56 +366,67 @@ class HardwareWindow(QWidget):
     #     webbrowser.open(url)
 
 
-    @pyqtSlot()
-    def authenticate1(self):
-        print("Метод authenticate вызван!")
+    def is_enabled_hw_probe(self) -> bool:
+        return my_utils.check_polkit_enabled()  and  my_utils.check_package_installed('hw-probe')
+        # return True
+        # return False
+
+
+    # @pyqtSlot()
+    # def authenticate1(self):
+    #     print("Метод authenticate вызван!")
 
 
     @pyqtSlot()
     def authenticate(self):
-        # dialog = QtPasswordDialog()
-        # password = dialog.get_password()
-        password, ok = QInputDialog.getText(None, 'Sudo Authentication', 'Enter sudo password:', QLineEdit.Password)
-
-        if not ok or password == '':
-            return
+        # password, ok = QInputDialog.getText(None, 'Sudo Authentication', 'Enter sudo password:', QLineEdit.Password)
+        #
+        # if not ok or password == '':
+        #     return
 
         # print(f"Пользователь ввёл пароль: {password}")
 
         try:
             # Проверка наличия пакета
-            check_installed = subprocess.run(
-                ['rpm', '-q', 'hw-probe'],
-                capture_output=True,
-                text=True
-            )
+            # check_installed = subprocess.run(
+            #     ['rpm', '-q', 'hw-probe'],
+            #     capture_output=True,
+            #     text=True
+            # )
 
             # Если пакет не установлен - устанавливаем
-            if check_installed.returncode != 0:
-                subprocess.run(
-                    ['sudo', '-S', 'apt-get', 'install', '-y', 'hw-probe'],
-                    input=f"{password}\n",
-                    capture_output=True,
-                    text=True,
-                    check=True
-                )
+            # if check_installed.returncode != 0:
+            #     subprocess.run(
+            #         ['sudo', '-S', 'apt-get', 'install', '-y', 'hw-probe'],
+            #         input=f"{password}\n",
+            #         capture_output=True,
+            #         text=True,
+            #         check=True
+            #     )
 
             # Запуск проверки оборудования
-            result = subprocess.run(
-                # 'sudo -E hw-probe -all',
-                ['sudo', '-S', '-k', 'hw-probe', '-all', '-upload'],
-                input=f"{password}\n",
-                capture_output=True,
-                text=True,
-                check=True
-            )
+            # result = subprocess.run(
+            #     # 'sudo -E hw-probe -all',
+            #     ['sudo', '-S', '-k', 'hw-probe', '-all', '-upload'],
+            #     input=f"{password}\n",
+            #     capture_output=True,
+            #     text=True,
+            #     check=True
+            # )
 
+            # Запуск hw-probe с правами root через pkexec
+            result = subprocess.run(
+                ['pkexec', 'hw-probe', '-all', '-upload'],
+                check=True,
+                text=True,
+                capture_output=True
+            )
+            # print(result.stdout)
 
             # Получение ссылки
             if 'Probe URL:' in result.stdout:
                 url = result.stdout.split('Probe URL:')[1].strip()
-                new_link = f'<a href="{url}">{url}</a><br>'
-                # current_text = self.link_label.text()
+                new_link = f'<a href="{url}">{url}</a>'
                 self.link_label.setText(new_link)
             else:
                 QMessageBox.critical(
@@ -439,7 +451,7 @@ class PluginHardware(plugins.Base, QWidget):
     def __init__(self):
         super().__init__("hardware", 30)
         # os.environ["QT_XKB_CONFIG_ROOT"] = "/usr/share/X11/xkb"
-        
+
         # Инициализируем QApplication с нужными параметрами
         # self.app = QApplication.instance() or QApplication([])
         self.node = None
@@ -452,7 +464,8 @@ class PluginHardware(plugins.Base, QWidget):
         self.node.setData(self.getName())
         plist.appendRow([self.node])
 
-        main_widget = HardwareWindow()
+        main_palette = pane.window().palette()
+        main_widget = HardwareWindow(main_palette)
 
         pane.addWidget(main_widget)
 
