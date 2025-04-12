@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget,
                              QGridLayout, QScrollArea,
                              QSpacerItem, QSizePolicy,
                              QMenu, QAction)
-from PyQt5.QtGui import QStandardItem, QPixmap
+from PyQt5.QtGui import QStandardItem, QIcon
 from PyQt5.QtCore import Qt
 
 import os
@@ -39,6 +39,24 @@ class AboutWidget(QWidget):
 
         return name
 
+    def translate_os_url(self, name:str) -> str:
+        dictionary = {
+            'ALT' : "https://altlinux.org",
+            'ALT Education' : "https://www.basealt.ru/alt-education",
+            'ALT Workstation' : "https://www.basealt.ru/alt-workstation",
+            'ALT Workstation K' : "https://www.basealt.ru/alt-workstation-k",
+            'ALT Regular' : "https://www.altlinux.org/Regular",
+            'Sisyphus' : "https://altlinux.org",
+            'ALT Server' : "https://www.basealt.ru/alt-server",
+            'ALT Virtualization Server' : "https://www.basealt.ru/alt-virtualization",
+            'ALT Starterkit' : "https://www.altlinux.org/Starterkits",
+		}
+
+        if name in dictionary:
+            name = dictionary[name]
+
+        return name
+
 
     def initUI(self):
         self.setAutoFillBackground(True)
@@ -60,9 +78,8 @@ class AboutWidget(QWidget):
         container_layout.setSpacing(10)
 
         # Добавляем Spacer сверху (с помощью QSizePolicy.Expanding)
-        top_spacer = QSpacerItem(5, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        top_spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
         container_layout.addItem(top_spacer)
-
 
         # Logo and name OS
         os_info = my_utils.parse_os_release()
@@ -70,43 +87,16 @@ class AboutWidget(QWidget):
         # os_info = my_utils.parse_os_release('./tests/etc/os-release-edu')
         # os_info = my_utils.parse_os_release('./tests/etc/os-release-server-v')
 
-        label_logo = QLabel(self)
-
-        # /usr/share/design/sisyphus/icons/altlinux.png
-        # /usr/share/design/sisyphus/icons/mini/altlinux.png
-        # /usr/share/design/sisyphus/icons/large/altlinux.png
-        # /usr/share/icons/hicolor/22x22/apps/altlinux.png
-        # /usr/share/icons/hicolor/48x48/apps/altlinux.png
-        # /usr/share/icons/hicolor/24x24/apps/altlinux.png
-        # /usr/share/icons/hicolor/128x128/apps/altlinux.png
-        # /usr/share/icons/hicolor/16x16/apps/altlinux.png
-        # /usr/share/icons/hicolor/32x32/apps/altlinux.png
-        # /usr/share/icons/hicolor/64x64/apps/altlinux.png
-
-        # if 'LOGO' in os_info and os_info['LOGO'] != '':
-        #     logo_name = os_info['LOGO'] + '.png'
-        # else:
-        #     logo_name = 'basealt.png'
-
-        # file_path = os.path.join('/usr/share/icons/hicolor/128x128/apps/', logo_name)
-
-        # if os.path.isfile(file_path):
-        #     pixmap = QPixmap(file_path)
-        # else:
-        #     pixmap = QPixmap('res/basealt.png')
-
-
-        file_path = my_utils.get_alt_logo_path('/usr/share/icons/hicolor/scalable/apps/', os_info, 'res/basealt128.png')
-        pixmap = QPixmap(file_path)
-        scaled_pixmap = pixmap.scaled(128, 128)
-        label_logo.setPixmap(scaled_pixmap)
-        label_logo.setAlignment(Qt.AlignCenter)
-
-
         s = self.translate_os_name(os_info["MY_NAME"])
         os_name = "{}{}".format(s, os_info["MY_NAME_VERSION"])
         if os_info["MY_NAME_NICK"] != '':
             os_name = os_name + '\n' + os_info["MY_NAME_NICK"]
+
+        # Product logo
+        label_logo = QLabel(self)
+        label_logo.setAlignment(Qt.AlignCenter)
+        if 'LOGO' in os_info and os_info['LOGO'] != '':
+            label_logo.setPixmap(QIcon.fromTheme(os_info['LOGO']).pixmap(128))
 
         label1 = QLabel(os_name)
         label1.setAlignment(Qt.AlignCenter)
@@ -117,10 +107,13 @@ class AboutWidget(QWidget):
         self.text = []
         self.text.append(os_name)
 
-        label2 = QLabel('<a href="https://www.basealt.ru/">https://www.basealt.ru/</a>')
+        url = self.translate_os_url(os_info["MY_NAME"])
+        label2 = QLabel('')
         label2.setAlignment(Qt.AlignCenter)
         label2.setOpenExternalLinks(True)
-        self.text.append('https://www.basealt.ru/')
+        if url != '':
+            label2.setText('<a href="%s">%s</a>' % (url, url))
+            self.text.append(url)
 
         # Добавляем метки в контейнер
         container_layout.addWidget(label_logo)
@@ -210,7 +203,7 @@ class AboutWidget(QWidget):
         container_layout.addLayout(grid_layout)
 
         # Добавляем Spacer снизу
-        bottom_spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        bottom_spacer = QSpacerItem(5, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
         container_layout.addItem(bottom_spacer)
 
         # Добавляем контейнер в scroll_area

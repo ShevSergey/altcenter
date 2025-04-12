@@ -259,34 +259,6 @@ class GetSystemInfo(QObject):
         return system_info
 
 
-# class QtPasswordDialog(QDialog):
-#     def __init__(self, parent=None):
-#         super().__init__(parent)
-#         self.setWindowTitle("Sudo Authentication")
-#         self.setModal(True)
-#
-#         layout = QVBoxLayout(self)
-#
-#         self.label = QLabel("Enter sudo password:")
-#         self.entry = QLineEdit()
-#         self.entry.setEchoMode(QLineEdit.Password)
-#
-#         self.buttons = QDialogButtonBox(
-#             QDialogButtonBox.Ok | QDialogButtonBox.Cancel
-#         )
-#         self.buttons.accepted.connect(self.accept)
-#         self.buttons.rejected.connect(self.reject)
-#
-#         layout.addWidget(self.label)
-#         layout.addWidget(self.entry)
-#         layout.addWidget(self.buttons)
-#
-#     def get_password(self):
-#         if self.exec_() == QDialog.Accepted:
-#             return self.entry.text()
-#         return None
-
-
 class BrowserThread(QThread):
     # Сигнал для запуска браузера
     open_browser_signal = pyqtSignal(str)
@@ -362,58 +334,13 @@ class HardwareWindow(QWidget):
             self.browser_thread.start()
 
 
-    # def open_browser(self, url):
-    #     webbrowser.open(url)
-
-
     def is_enabled_hw_probe(self) -> bool:
         return my_utils.check_polkit_enabled()  and  my_utils.check_package_installed('hw-probe')
-        # return True
-        # return False
-
-
-    # @pyqtSlot()
-    # def authenticate1(self):
-    #     print("Метод authenticate вызван!")
 
 
     @pyqtSlot()
     def authenticate(self):
-        # password, ok = QInputDialog.getText(None, 'Sudo Authentication', 'Enter sudo password:', QLineEdit.Password)
-        #
-        # if not ok or password == '':
-        #     return
-
-        # print(f"Пользователь ввёл пароль: {password}")
-
         try:
-            # Проверка наличия пакета
-            # check_installed = subprocess.run(
-            #     ['rpm', '-q', 'hw-probe'],
-            #     capture_output=True,
-            #     text=True
-            # )
-
-            # Если пакет не установлен - устанавливаем
-            # if check_installed.returncode != 0:
-            #     subprocess.run(
-            #         ['sudo', '-S', 'apt-get', 'install', '-y', 'hw-probe'],
-            #         input=f"{password}\n",
-            #         capture_output=True,
-            #         text=True,
-            #         check=True
-            #     )
-
-            # Запуск проверки оборудования
-            # result = subprocess.run(
-            #     # 'sudo -E hw-probe -all',
-            #     ['sudo', '-S', '-k', 'hw-probe', '-all', '-upload'],
-            #     input=f"{password}\n",
-            #     capture_output=True,
-            #     text=True,
-            #     check=True
-            # )
-
             # Запуск hw-probe с правами root через pkexec
             result = subprocess.run(
                 ['pkexec', 'hw-probe', '-all', '-upload'],
@@ -421,7 +348,6 @@ class HardwareWindow(QWidget):
                 text=True,
                 capture_output=True
             )
-            # print(result.stdout)
 
             # Получение ссылки
             if 'Probe URL:' in result.stdout:
@@ -450,14 +376,7 @@ class HardwareWindow(QWidget):
 class PluginHardware(plugins.Base, QWidget):
     def __init__(self):
         super().__init__("hardware", 30)
-        # os.environ["QT_XKB_CONFIG_ROOT"] = "/usr/share/X11/xkb"
-
-        # Инициализируем QApplication с нужными параметрами
-        # self.app = QApplication.instance() or QApplication([])
         self.node = None
-        self.link_label = None
-        self.text_browser = None
-
 
     def start(self, plist, pane):
         self.node = QStandardItem(self.tr("Hardware"))
@@ -468,69 +387,6 @@ class PluginHardware(plugins.Base, QWidget):
         main_widget = HardwareWindow(main_palette)
 
         pane.addWidget(main_widget)
-
-    # @pyqtSlot()
-    # def authenticate(self):
-    #     print("call authenticate()")
-
-    # def authenticate1(self):
-    #     dialog = QtPasswordDialog()
-    #     password = dialog.get_password()
-    #
-    #     if not password:
-    #         return
-    #
-    #     try:
-    #         # Проверка наличия пакета
-    #         check_installed = subprocess.run(
-    #             ['rpm', '-q', 'hw-probe'],
-    #             capture_output=True,
-    #             text=True
-    #         )
-    #
-    #         # Если пакет не установлен - устанавливаем
-    #         if check_installed.returncode != 0:
-    #             subprocess.run(
-    #                 ['sudo', '-S', 'apt-get', 'install', '-y', 'hw-probe'],
-    #                 input=f"{password}\n",
-    #                 capture_output=True,
-    #                 text=True,
-    #                 check=True
-    #             )
-    #
-    #         # Запуск проверки оборудования
-    #         result = subprocess.run(
-    #             ['sudo', '-E', 'hw-probe', '-all', '-upload'],
-    #             input=f"{password}\n",
-    #             capture_output=True,
-    #             text=True,
-    #             check=True
-    #         )
-    #
-    #         # Получение ссылки
-    #         if 'Probe URL:' in result.stdout:
-    #             url = result.stdout.split('Probe URL:')[1].strip()
-    #             new_link = f'<a href="{url}">{url}</a><br>'
-    #             current_text = self.link_label.text()
-    #             self.link_label.setText(new_link + current_text)
-    #         else:
-    #             QMessageBox.critical(
-    #                 None,
-    #                 self.tr("Error"),
-    #                 self.tr("Failed to get probe link\nPlease try again later")
-    #             )
-    #
-    #     except Exception as e:
-    #         error_msg = self.tr("Unknown error")
-    #         # if isinstance(e, subprocess.CalledProcessError):
-    #         #     error_msg = e.stderr.strip() or error_msg
-    #
-    #         QMessageBox.critical(
-    #             None,
-    #             self.tr("Error"),
-    #             f"{self.tr('Error occurred')}:\n{error_msg}"
-    #         )
-
 
 
 if __name__ == '__main__':

@@ -213,25 +213,6 @@ def is_in_autostart(app_name) -> bool:
         return False
 
 
-def get_alt_logo_path(search_path: str, os_info: dict, default_file: str) -> str:
-    SUPPORTED_EXTENSIONS = ['.svg', '.png', '.jpg', '.jpeg']
-
-    file_path = default_file
-
-    # Определяем путь к логотипу
-    if 'LOGO' in os_info and os_info.get('LOGO', ''):
-        logo_base = os_info['LOGO']
-
-        # Проверяем все расширения в целевой директории
-        for ext in SUPPORTED_EXTENSIONS:
-            possible_path = os.path.join(search_path, f"{logo_base}{ext}")
-            if os.path.isfile(possible_path):
-                file_path = possible_path
-                break
-
-    return file_path
-
-
 def check_package_installed(package: str) -> bool:
     """Проверяет, установлен ли пакет package через rpm"""
     try:
@@ -333,4 +314,4 @@ if __name__ == "__main__":
     # remove_from_autostart("altcenter")
     # is_in_autostart("altcenter")
 
-    print(check_polkit_enabled())
+    # print(check_polkit_enabled())

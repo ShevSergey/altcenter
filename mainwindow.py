@@ -23,25 +23,15 @@ from PyQt5.QtWidgets import QApplication, QWidget
 from PyQt5.QtCore import QTranslator, QSettings
 from PyQt5.QtCore import QCommandLineParser, QCommandLineOption
 # from PyQt5 import uic
-from PyQt5.QtGui import QStandardItemModel, QPixmap
+from PyQt5.QtGui import QStandardItemModel, QIcon
 
 import os
 import sys
 import locale
 import pathlib
 
-# current_file = os.path.abspath(__file__)
-# current_dir = os.path.dirname(current_file)
-# os.chdir(current_dir)
-
 from ui_mainwindow import Ui_MainWindow
 from plugins import Base
-import my_utils
-
-# data_dir = "/usr/share/altcenter"
-# data_dir = "."
-
-# plugin_path = os.path.join(data_dir, "plugins")
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 plugin_path = os.path.join(current_dir, "plugins")
@@ -62,42 +52,6 @@ class MainWindow(QWidget, Ui_MainWindow):
         self.splitter.setStretchFactor(0,0)
         self.splitter.setStretchFactor(1,1)
 
-        # self.runOnSessionStart.setChecked(not my_utils.is_in_autostart(APPLICATION_NAME))
-        # self.runOnSessionStart.toggled.connect(self.on_checkbox_toggled)
-
-        # Получаем размеры экрана
-        screen_geometry = QApplication.desktop().screenGeometry()
-        screen_width = screen_geometry.width()
-        screen_height = screen_geometry.height()
-
-        # Задаем размеры окна
-        new_width = int((screen_width / 4) * 2)
-        new_height = screen_height // 2
-
-        if new_width > self.width()  or  new_height > self.height():
-            if new_width < self.width():
-                new_width = self.width()
-
-            if new_height < self.height():
-                new_height = self.height()
-
-            self.resize(new_width, new_height)
-
-
-        # Центрируем окно на экране
-        self.setGeometry(
-            (screen_width - self.width()) // 2,
-            (screen_height - self.height()) // 2,
-            self.width(), self.height()
-        )
-
-
-    # def on_checkbox_toggled(self, checked):
-    #     if checked:
-    #         my_utils.remove_from_autostart(APPLICATION_NAME)
-    #     else:
-    #         my_utils.add_to_autostart(APPLICATION_NAME, pathlib.Path(current_dir) / APPLICATION_NAME)
-
     def onSelectionChange(self, index):
         """Slot for change selection"""
         self.stack.setCurrentIndex(index.row() + 1)
@@ -109,7 +63,7 @@ class MainWindow(QWidget, Ui_MainWindow):
 
 
 # Run application
-app = QApplication(sys.argv)  # Create an instance of QtWidgets.QApplication
+app = QApplication(sys.argv) # Create an instance of QtWidgets.QApplication
 app.setApplicationName(APPLICATION_NAME)
 app.setApplicationVersion(APPLICATION_VERSION)
 app.setDesktopFileName("altcenter")
@@ -119,11 +73,8 @@ current_config = os.path.join(pathlib.Path.home(), ".config", "altcenter.ini")
 settings = QSettings(current_config, QSettings.IniFormat)
 
 # Load current locale translation
-# current_file = os.path.abspath(__file__)
-# current_dir = os.path.dirname(current_file)
-
 translator = QTranslator(app)
-tr_file = os.path.join(current_dir, 'altcenter_' + locale.getlocale()[0].split( '_' )[0])
+tr_file = os.path.join(current_dir, "altcenter_" + locale.getlocale()[0].split( '_' )[0])
 # print( "Load translation from %s.qm" % ( tr_file ) )
 if translator.load( tr_file ):
     app.installTranslator(translator)
@@ -197,14 +148,7 @@ window.splitter.setStretchFactor(0,0)
 window.splitter.setStretchFactor(1,1)
 
 # Reset logo by absolute path
-os_info = my_utils.parse_os_release()
-# os_info = my_utils.parse_os_release('tests/etc/os-release-regular')
-# os_info = my_utils.parse_os_release('tests/etc/os-release-wsk')
-# os_info = my_utils.parse_os_release('tests/etc/os-release-edu')
-file_path = my_utils.get_alt_logo_path('/usr/share/icons/hicolor/scalable/apps/', os_info, 'res/basealt64.png')
-pixmap = QPixmap(file_path)
-scaled_pixmap = pixmap.scaled(64, 64)
-window.altLogo.setPixmap(scaled_pixmap)
+window.altLogo.setPixmap(QIcon.fromTheme("basealt").pixmap(64))
 
 # Show window
 window.show()
